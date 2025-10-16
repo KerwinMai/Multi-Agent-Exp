@@ -1,0 +1,15 @@
+# 大模型配置
+llm:
+  provider: "dashscope"
+  model: "qwen-turbo"
+  api_key: "${DASHSCOPE_API_KEY}"
+  temperature: 0.1
+  max_tokens: 2048
+
+# 数据库配置
+database:
+  path: "./data/company.db"
+
+# NL2SQL配置
+nl2sql:
+  num_examples: 3   # Few-shot示例数量
