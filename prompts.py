@@ -114,19 +114,21 @@ def get_response_format_prompt(question: str, query_result: str) -> str:
 请用自然语言简洁地回答用户的问题，不要显示原始的JSON数据。如果结果为空，请友好地告知用户。"""
 
 
-def get_master_intent_prompt(question: str, conversation_history: str = "") -> str:
+def get_master_intent_prompt(question: str, conversation_history: str = "", user_context: str = "") -> str:
     """主智能体意图识别的提示词
     
     Args:
         question: 用户当前问题
         conversation_history: 会话历史摘要
+        user_context: 用户长期记忆上下文（偏好和知识）
     
     Returns:
         意图识别提示词
     """
     history_context = f"\n对话历史：\n{conversation_history}\n" if conversation_history else ""
+    user_section = f"\n用户信息：\n{user_context}\n" if user_context else ""
     
-    return f"""你是一个智能任务路由器，需要分析用户的问题并决定如何处理。{history_context}
+    return f"""你是一个智能任务路由器，需要分析用户的问题并决定如何处理。{history_context}{user_section}
 当前问题：{question}
 
 请判断这个问题属于以下哪一类：

@@ -13,3 +13,10 @@ database:
 # NL2SQL配置
 nl2sql:
   num_examples: 3   # Few-shot示例数量
+
+# 记忆配置
+memory:
+  long_term_db: "./data/long_term_memory.db"  # 长期记忆数据库路径
+  short_term_max_tokens: 1000  # 短期记忆最大token数
+  compression_threshold: 10  # 超过10条消息开始压缩
+  auto_extract_knowledge: true  # 会话中自动提取知识（6轮对话后）
