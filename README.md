@@ -1,4 +1,14 @@
-# 多智能体数据查询系统 v2.0
+# 多智能体数据查询系统 v2.1
+
+<!-- 演示视频 -->
+<div align="center">
+  <video src="./video/demo.mp4" controls style="max-width: 100%; border-radius: 12px; border: 1px solid #e2e8f0;">
+    您的浏览器不支持视频播放。您可以直接下载观看：
+    <a href="./video/demo.mp4">demo.mp4</a>
+  </video>
+</div>
+
+> v2.1 新增：内置 Web 前端（Markdown 渲染、代码高亮、即时加载长期记忆）、REST API、启动脚本等。
 
 基于LangGraph的一主两从多智能体架构，实现智能的数据库查询和分析功能，支持长短期记忆。
 
@@ -74,13 +84,34 @@ python init_db.py              # 初始化业务数据库
 python init_memory_db.py       # 初始化长期记忆数据库
 ```
 
-### 4. 运行系统
+### 4. 运行系统（命令行）
 ```bash
 cd intelligent_data_query
 python agent.py
 ```
 
 系统会提示输入用户ID，输入后即可开始使用。同一user_id可以在不同会话中保留个人偏好。
+
+### 5. 启动 Web 前端（v2.1）
+
+```bash
+# Windows
+cd intelligent_data_query
+start_web.bat
+
+# Linux/Mac
+cd intelligent_data_query
+chmod +x start_web.sh
+./start_web.sh
+```
+
+浏览器访问：`http://localhost:5000`
+
+前端特性（v2.1）：
+- Web 聊天界面，支持 Markdown 渲染与代码高亮
+- 聊天区滚动优化，输入框固定底部
+- 登录后直接从 `long_term_memory.db` 读取并展示用户信息（无需对话总结）
+- REST API：`/api/login`、`/api/query`、`/api/new_session`、`/api/user_info`、`/api/health`
 
 **特殊命令**：
 - `new` - 开始新会话（清空短期记忆，保留长期记忆）
@@ -89,7 +120,7 @@ python agent.py
 
 ## 测试问题
 
-系统包含10个测试问题，覆盖所有意图类型：
+系统示例测试问题，覆盖所有意图类型：
 
 **简单问候**
 - 你好，你能帮我做什么？
@@ -130,6 +161,14 @@ intelligent_data_query/
 │   ├── long_term_memory.db     # 长期记忆数据库 ⭐NEW
 │   ├── init_db.py              # 业务数据库初始化
 │   └── init_memory_db.py       # 记忆数据库初始化 ⭐NEW
+├── static/                     # Web 前端(v2.1)
+│   ├── index.html             # 主页面（聊天界面）
+│   ├── style.css              # 样式（含滚动条/Markdown适配）
+│   └── app.js                 # 前端逻辑（Markdown、用户信息、API）
+├── start_web.bat              # Windows 启动脚本
+├── start_web.sh               # Linux/Mac 启动脚本
+├── video/
+│   └── demo.mp4              # 演示视频
 └── mcp_sql_server.py           # MCP SQL服务器
 ```
 
@@ -173,6 +212,7 @@ memory:
 - ~~**上下文压缩**~~: LLM智能总结对话历史 ✅ (v2.0)
 - ~~**用户系统**~~: 支持多用户登录和会话管理 ✅ (v2.0)
 - ~~**自动记忆提取**~~: 从对话中自动提取用户偏好 ✅ (v2.0)
+- ~~**Web 前端**~~: 聊天界面 + Markdown 渲染 + 代码高亮 + 即时读取长期记忆 ✅ (v2.1)
 
 ## 下一步计划扩展
 
@@ -209,6 +249,14 @@ memory:
 - 长期记忆数据库建议定期备份
 
 ## 更新日志
+
+### v2.1 (2025.11.05)
+- ✨ 新增：内置 Web 前端（`static/`），支持 Markdown 渲染与代码高亮
+- ✨ 新增：REST API（`/api/login`、`/api/query`、`/api/new_session`、`/api/user_info`、`/api/health`）
+- ✨ 新增：登录后直接读取 `long_term_memory.db`，即时展示用户偏好/知识
+- ✨ 新增：启动脚本 `start_web.bat` / `start_web.sh`
+- 🎬 新增：项目演示视频 `video/demo.mp4`
+- 🔧 优化：聊天滚动条与输入框体验（输入框固定底部）
 
 ### v2.0 (2025.10.21)
 - ✨ 新增：长期记忆系统（用户偏好、知识跨会话持久化）

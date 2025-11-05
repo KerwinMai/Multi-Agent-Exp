@@ -168,8 +168,8 @@ SQLAgent = MultiAgentSystem
 
 def main():
     console.print(Panel.fit(
-        "[cyan]LangGraph 多智能体数据查询系统 v2.0[/cyan]\n"
-        "主智能体 + SQL查询 + 数据分析\n"
+        "[cyan]LangGraph 多智能体数据查询系统 v2.1[/cyan]\n"
+        "主智能体 + SQL查询 + 数据分析 + Web前端\n"
         "智能路由 · 深度分析 · 长短期记忆",
         border_style="cyan"
     ))

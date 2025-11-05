@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多智能体数据查询系统 v2.0</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.5.0/github-markdown.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.9/dist/purify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/highlight.min.js"></script>
+</head>
+<body>
+    <!-- 登录遮罩层 -->
+    <div id="loginOverlay" class="login-overlay">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo-container">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
+                        <path d="M2 17L12 22L22 17"/>
+                        <path d="M2 12L12 17L22 12"/>
+                    </svg>
+                    <h1>多智能体数据查询系统</h1>
+                </div>
+                <p class="login-subtitle">基于 LangGraph 的智能数据分析平台</p>
+            </div>
+            
+            <div class="login-body">
+                <div class="input-group">
+                    <label for="userIdInput">用户ID</label>
+                    <input 
+                        type="text" 
+                        id="userIdInput" 
+                        placeholder="请输入您的用户ID"
+                        class="input-field"
+                    >
+                    <p class="input-hint">用于保存您的个人偏好和历史记忆</p>
+                </div>
+                
+                <button id="loginBtn" class="btn btn-primary btn-large">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                        <polyline points="10 17 15 12 10 7"/>
+                        <line x1="15" y1="12" x2="3" y2="12"/>
+                    </svg>
+                    开始使用
+                </button>
+            </div>
+            
+            <div class="login-footer">
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        <span>智能路由</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        <span>多智能体协作</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <span>个性化记忆</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主界面 -->
+    <div id="mainApp" class="main-app" style="display: none;">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container-small">
+                    <svg class="logo-icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
+                        <path d="M2 17L12 22L22 17"/>
+                        <path d="M2 12L12 17L22 12"/>
+                    </svg>
+                    <h2>数据查询系统</h2>
+                </div>
+            </div>
+
+            <div class="sidebar-content">
+                <!-- 用户信息卡片 -->
+                <div class="user-card">
+                    <div class="user-avatar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name" id="userName">Guest</div>
+                        <div class="user-session">会话: <span id="sessionId">-</span></div>
+                    </div>
+                </div>
+
+                <!-- 操作按钮 -->
+                <div class="action-buttons">
+                    <button class="btn btn-outline" id="newSessionBtn">
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                        新建会话
+                    </button>
+                    <button class="btn btn-outline" id="userInfoBtn">
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                        用户信息
+                    </button>
+                </div>
+
+                <!-- 快速问题 -->
+                <div class="quick-questions">
+                    <h3>快速问题</h3>
+                    <div class="question-list">
+                        <button class="question-item" data-question="公司总共有多少个部门？每个部门分别在哪个城市？">
+                            📊 查询部门信息
+                        </button>
+                        <button class="question-item" data-question="研发部有多少名员工？他们的职位分布是怎样的？">
+                            👥 研发部员工统计
+                        </button>
+                        <button class="question-item" data-question="对比一下研发部、产品部和设计部的平均薪资水平">
+                            💰 部门薪资对比
+                        </button>
+                        <button class="question-item" data-question="找出薪资最高的10名员工，分析他们的职位和部门分布特征">
+                            🏆 高薪员工分析
+                        </button>
+                        <button class="question-item" data-question="分析公司各城市的人员分布和薪资差异，给出优化建议">
+                            🌍 城市分布分析
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 系统说明 -->
+                <div class="system-info">
+                    <h4>系统功能</h4>
+                    <ul>
+                        <li>💡 自然语言数据查询</li>
+                        <li>🔍 智能数据分析</li>
+                        <li>🧠 长短期记忆</li>
+                        <li>🤖 多智能体协作</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <button class="btn btn-text btn-logout" id="logoutBtn">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    退出登录
+                </button>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="welcome-message">
+                        <h2>👋 欢迎使用多智能体数据查询系统</h2>
+                        <p>我可以帮您进行数据查询和分析，支持自然语言提问。</p>
+                        <div class="welcome-tips">
+                            <div class="tip-item">
+                                <span class="tip-icon">💬</span>
+                                <span>直接用自然语言提问</span>
+                            </div>
+                            <div class="tip-item">
+                                <span class="tip-icon">📊</span>
+                                <span>支持复杂数据分析</span>
+                            </div>
+                            <div class="tip-item">
+                                <span class="tip-icon">🔄</span>
+                                <span>智能上下文理解</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-container">
+                    <div class="input-wrapper">
+                        <textarea 
+                            id="questionInput" 
+                            placeholder="请输入您的问题..." 
+                            rows="1"
+                            class="chat-input"
+                        ></textarea>
+                        <button id="sendBtn" class="btn btn-send">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13"/>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="input-hint-row">
+                        <span class="input-hint">按 Enter 发送，Shift + Enter 换行</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 用户信息模态框 -->
+    <div id="userInfoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>用户信息</h3>
+                <button class="modal-close" id="closeModalBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="userInfoContent">
+                <!-- 动态填充用户信息 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
