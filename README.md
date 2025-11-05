@@ -1,7 +1,7 @@
 # 多智能体数据查询系统 v2.1
 
 > v2.1 新增：内置 Web 前端（Markdown 渲染、即时加载长期记忆）、REST API、启动脚本等。
-https://github.com/user-attachments/assets/3b1b1513-3c92-4952-b8e1-7e62e77630c9
+[https://github.com/user-attachments/assets/3b1b1513-3c92-4952-b8e1-7e62e77630c9](https://github.com/user-attachments/assets/3b1b1513-3c92-4952-b8e1-7e62e77630c9)
 
 基于LangGraph的一主两从多智能体架构，实现智能的数据库查询和分析功能，支持长短期记忆。
 
